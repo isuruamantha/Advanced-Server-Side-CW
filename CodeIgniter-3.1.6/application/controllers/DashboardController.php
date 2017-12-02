@@ -21,7 +21,9 @@ class DashboardController extends CI_Controller
 
     public function index()
     {
+        $this->load->view("templates/header");
         $this->load->view("pages/dashboard.php");
+        $this->load->view("templates/footer");
     }
 
     /*
@@ -30,7 +32,9 @@ class DashboardController extends CI_Controller
     public function getCelebrityDetails()
     {
         $data['celebDetails'] = $this->celebrity_model->getCelebrityDetails();
+        $this->load->view("templates/header_logout");
         $this->load->view("pages/dashboard.php", $data);
+        $this->load->view("templates/footer");
     }
 
     /*
@@ -39,7 +43,9 @@ class DashboardController extends CI_Controller
     public function getCelebrityDetailsinDesc()
     {
         $data['celebDetails'] = $this->celebrity_model->getCelebrityDetailsDecs();
+        $this->load->view("templates/header");
         $this->load->view("pages/results.php", $data);
+        $this->load->view("templates/footer");
     }
 
     /*
@@ -47,7 +53,9 @@ class DashboardController extends CI_Controller
   */
     public function ViewaddCelebrity()
     {
+        $this->load->view("templates/header");
         $this->load->view("pages/addCelebrity.php", array('error' => ' '));
+        $this->load->view("templates/footer");
     }
 
     public function user_logout()
@@ -63,8 +71,8 @@ class DashboardController extends CI_Controller
             'allowed_types' => "gif|jpg|png|jpeg|pdf",
             'overwrite' => TRUE,
             'max_size' => "2048000", // Can be set to particular file size , here it is 2 MB(2048 Kb)
-            'max_height' => "1200",
-            'max_width' => "1200"
+            'max_height' => "1800",
+            'max_width' => "1800"
         );
 
         $this->load->library('upload', $config);
@@ -84,8 +92,11 @@ class DashboardController extends CI_Controller
             'imagePath' => $filename,
             'addedDate' => date("Y/m/d")
         );
-        print_r($celebrityData);
         $this->celebrity_model->register_celebrity($celebrityData);
+
+        $this->load->view("templates/header");
+        $this->load->view("pages/dashboard.php");
+        $this->load->view("templates/footer");
 
     }
 
@@ -103,7 +114,9 @@ class DashboardController extends CI_Controller
 
         } else {
 //            $this->load->view("dashboardController/getCelebrityDetailsinDesc");
+            $this->load->view("templates/header");
             $this->load->view("pages/results.php");
+            $this->load->view("templates/footer");
         }
     }
 

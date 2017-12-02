@@ -14,13 +14,15 @@ class UserController extends CI_Controller
         parent::__construct();
         $this->load->helper('url');
         $this->load->model('user_model');
-        $this->load->library('session');
+        $this->load->library(array('session', 'form_validation'));
     }
 
 
     public function index()
     {
+        $this->load->view("templates/header");
         $this->load->view("pages/login");
+        $this->load->view("templates/footer");
     }
 
     /*
@@ -39,7 +41,7 @@ class UserController extends CI_Controller
         if ($isValidEmail) {
             $this->user_model->register_user($userData);
             $this->session->set_flashdata('success_msg', 'Successfully Registered! Please login now');
-            redirect('user/login_view');
+            redirect('userController/login_view');
         } else {
             $this->session->set_flashdata('error_msg', 'Some error occurred! Try again please.');
             redirect('user/register.php');
@@ -49,12 +51,16 @@ class UserController extends CI_Controller
 
     public function login_view()
     {
+        $this->load->view("templates/header");
         $this->load->view("pages/login.php");
+        $this->load->view("templates/footer");
     }
 
     public function register_view()
     {
+        $this->load->view("templates/header");
         $this->load->view("pages/register.php");
+        $this->load->view("templates/footer");
     }
 
     /*
@@ -76,14 +82,19 @@ class UserController extends CI_Controller
             redirect('/DashboardController/getCelebrityDetails');
         } else {
             $this->session->set_flashdata('error_msg', 'Some error occurred! Try again please.');
+
+            $this->load->view("templates/header");
             $this->load->view("pages/login.php");
+            $this->load->view("templates/footer");
         }
     }
 
 
     function user_profile()
     {
+        $this->load->view("templates/header");
         $this->load->view('pages/user_profile.php');
+        $this->load->view("templates/footer");
     }
 
     /*

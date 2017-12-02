@@ -37,7 +37,8 @@
                               </div>
 
                                 <div class="form-group">
-                                  <input class="form-control" placeholder="Description" name="celebDescription" type="text"
+                                  <input class="form-control" placeholder="Description" name="celebDescription"
+                                         type="text"
                                          autofocus>
                                 </div>
 

@@ -20,6 +20,9 @@
             <li><a href="<?php echo base_url(); ?>dashboardController/getCelebrityDetailsinDesc">Leaderboard</a></li>
             <li><a href="<?php echo base_url(); ?>dashboardController/ViewaddCelebrity">Add celebrity</a></li>
         </ul>
+        <div class="navbar-header" style="float: right">
+            <a class="navbar-brand" href="<?php echo base_url('userController/user_logout'); ?>">Logout</a>
+        </div>
     </div>
 </nav>
 

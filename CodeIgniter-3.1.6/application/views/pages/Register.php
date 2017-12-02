@@ -30,19 +30,23 @@
                       <!--Registration form-->
                       <form role="form" method="post" action="<?php echo base_url('userController/register_user'); ?>">
                           <fieldset>
-                              <div class="form-group">
+                              <div class="input-group">
+                                  <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                                   <input class="form-control" placeholder="Username" name="userName" type="text"
                                          autofocus>
-                              </div>
+                              </div><br>
 
-                              <div class="form-group">
+                              <div class="input-group">
+                                  <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
                                   <input class="form-control" placeholder="Email Address" name="userEmail" type="email"
                                          autofocus>
-                              </div>
-                              <div class="form-group">
+                              </div><br>
+
+                              <div class="input-group">
+                                  <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                                   <input class="form-control" placeholder="Password" name="userPassword"
                                          type="password" value="">
-                              </div>
+                              </div><br>
 
                               <input class="btn btn-lg btn-success btn-block" type="submit" value="Register"
                                      name="register">

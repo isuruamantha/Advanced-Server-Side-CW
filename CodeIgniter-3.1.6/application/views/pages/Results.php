@@ -17,6 +17,11 @@ if (!$celebDetails)
 <body>
 
 <div class="container">
+
+    <div class="text-center center-block">
+        <button type="button" class="btn btn-success">Total count of votes  &nbsp;<span class="badge">7</span></button>
+        <button type="button" class="btn btn-success">All user votes  &nbsp;<span class="badge">7</span></button>
+    </div>
     <h2>Celebrities with votes</h2>
     <ul class="list-group">
         <?php foreach ($celebDetails as $celebrity): ?>

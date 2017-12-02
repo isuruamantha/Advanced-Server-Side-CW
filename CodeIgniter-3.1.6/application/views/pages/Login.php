@@ -35,24 +35,27 @@
                 }
                 ?>
 
-<!--                Login Form-->
+                <!--                Login Form-->
                 <div class="panel-body">
                     <form role="form" method="post" action="<?php echo base_url('userController/login_user'); ?>">
                         <fieldset>
-                            <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                                 <input class="form-control" placeholder="Username" name="userName" type="text"
                                        autofocus>
-                            </div>
-                            <div class="form-group">
+                            </div><br>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                                 <input class="form-control" placeholder="Password" name="userPassword" type="password"
                                        value="">
-                            </div>
+                            </div><br>
 
                             <input class="btn btn-lg btn-success btn-block" type="submit" value="login" name="login">
 
                         </fieldset>
                     </form>
-                    <center><b>Not registered ?</b> <br></b><a href="<?php echo base_url('userController/register_view'); ?>">Register
+                    <center><b>Not registered ?</b> <br></b><a
+                                href="<?php echo base_url('userController/register_view'); ?>">Register
                             here</a>
                     </center>
                 </div>
