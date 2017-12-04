@@ -24,6 +24,17 @@ if ($celebDetails[0]['id'] == $celebDetails[1]['id'])
 <div class=" container-fluid
     " style="margin-left: 140px; margin-right: 140px">
     <div class="row">
+        <script type='text/javascript' src="<?php echo base_url();
+        ?>js/text_animation.js"></script>
+        <div>
+            <h1>
+                <a class="typewrite" data-period="2000"
+                   data-type='[ "Please vote for your favourite celebrity...", "You can vote multiple times..." ]'>
+                    <span class="wrap"></span>
+                </a>
+            </h1>
+        </div>
+
         <hr>
         <?php
         foreach (array_slice($celebDetails, 0, 2) as $celebrity): ?>

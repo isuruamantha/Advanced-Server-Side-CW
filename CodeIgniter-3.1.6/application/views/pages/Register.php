@@ -16,14 +16,29 @@
           <div class="col-md-4 col-md-offset-4">
               <div class="login-panel panel panel-success">
                   <div class="panel-heading">
-                      <h3 class="panel-title">Registration</h3>
+                      <h3 class="panel-title text-center center-block" >Registration</h3>
                   </div>
                   <div class="panel-body">
 
                   <?php
+                  $success_msg = $this->session->flashdata('success_msg');
                   $error_msg = $this->session->flashdata('error_msg');
-                  if ($error_msg) {
-                      echo $error_msg;
+                  if ($success_msg) {
+                      ?>
+                      <div class="alert alert-success">
+                        <?php echo $success_msg; ?>
+                    </div>
+                      <?php
+                  }
+                  if ($error_msg || validation_errors()) {
+                      ?>
+                      <div class="alert alert-danger">
+                        <?php
+                        print_r($error_msg);
+                        echo validation_errors();
+                        ?>
+                    </div>
+                      <?php
                   }
                   ?>
 
@@ -33,19 +48,25 @@
                               <div class="input-group">
                                   <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                                   <input class="form-control" placeholder="Username" name="userName" type="text"
-                                         autofocus>
+                                         value="<?php echo set_value('userName'); ?>" autofocus>
                               </div><br>
 
                               <div class="input-group">
                                   <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
                                   <input class="form-control" placeholder="Email Address" name="userEmail" type="email"
-                                         autofocus>
+                                         value="<?php echo set_value('userEmail'); ?>" autofocus>
                               </div><br>
 
                               <div class="input-group">
                                   <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                                   <input class="form-control" placeholder="Password" name="userPassword"
-                                         type="password" value="">
+                                         value="<?php echo set_value('userPassword'); ?>" type="password">
+                              </div><br>
+
+                              <div class="input-group">
+                                  <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                  <input class="form-control" placeholder="Confirm Password" name="userPasswordConfirm"
+                                         value="<?php echo set_value('userPasswordConfirm'); ?>" type="password">
                               </div><br>
 
                               <input class="btn btn-lg btn-success btn-block" type="submit" value="Register"

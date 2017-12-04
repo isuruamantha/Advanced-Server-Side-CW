@@ -13,12 +13,12 @@
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="<?php echo base_url(); ?>usercontroller">Celevote</a>
+            <a class="navbar-brand" href="<?php echo base_url(); ?>dashboardController">Celevote</a>
         </div>
         <ul class="nav navbar-nav">
             <li class="active"><a href="<?php echo base_url(); ?>dashboardController">Home</a></li>
             <li><a href="<?php echo base_url(); ?>dashboardController/getCelebrityDetailsinDesc">Leaderboard</a></li>
-            <li><a href="<?php echo base_url(); ?>dashboardController/ViewaddCelebrity">Add celebrity</a></li>
+            <li><a href="<?php echo base_url(); ?>dashboardController/ViewaddCelebrity">Add a celebrity</a></li>
         </ul>
     </div>
 </nav>

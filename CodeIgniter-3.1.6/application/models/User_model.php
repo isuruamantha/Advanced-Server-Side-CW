@@ -50,6 +50,21 @@ class User_model extends CI_model
         }
     }
 
+    /*
+ * Retreive total count of users
+ */
+    public function getTotalUsercount()
+    {
+        $this->db->select('userId');
+        $this->db->from('user');
+
+        if ($query = $this->db->get()) {
+            return $query->num_rows();
+        } else {
+            return false;
+        }
+    }
+
 }
 
 

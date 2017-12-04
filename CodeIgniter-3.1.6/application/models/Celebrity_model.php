@@ -85,6 +85,36 @@ class Celebrity_model extends CI_model
         }
     }
 
+    /*
+     * Retreive total count of votes
+     */
+    public function getTotalCountofVotes()
+    {
+        $this->db->select_sum('voteCount');
+        $this->db->from('celebritydetails');
+
+        if ($query = $this->db->get()) {
+            return $query->row()->voteCount;
+        } else {
+            return false;
+        }
+    }
+
+    /*
+* Retreive total count of celebrities
+*/
+    public function getTotalCelebrityCount()
+    {
+        $this->db->select('id');
+        $this->db->from('celebritydetails');
+
+        if ($query = $this->db->get()) {
+            return $query->num_rows();
+        } else {
+            return false;
+        }
+    }
+
 }
 
 

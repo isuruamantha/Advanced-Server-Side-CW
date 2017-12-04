@@ -21,9 +21,24 @@
                   <div class="panel-body">
 
                   <?php
+                  $success_msg = $this->session->flashdata('success_msg');
                   $error_msg = $this->session->flashdata('error_msg');
-                  if ($error_msg) {
-                      echo $error_msg;
+                  if ($success_msg) {
+                      ?>
+                      <div class="alert alert-success">
+                        <?php echo $success_msg; ?>
+                    </div>
+                      <?php
+                  }
+                  if ($error_msg || validation_errors()) {
+                      ?>
+                      <div class="alert alert-danger">
+                        <?php
+                        print_r($error_msg);
+                        echo validation_errors();
+                        ?>
+                    </div>
+                      <?php
                   }
                   ?>
 
@@ -33,13 +48,12 @@
                       <fieldset>
                               <div class="form-group">
                                   <input class="form-control" placeholder="Celebrity Name" name="celebName" type="text"
-                                         autofocus>
+                                         value="<?php echo set_value('celebName'); ?>" autofocus>
                               </div>
 
                                 <div class="form-group">
                                   <input class="form-control" placeholder="Description" name="celebDescription"
-                                         type="text"
-                                         autofocus>
+                                         type="text" value="<?php echo set_value('celebDescription'); ?>" autofocus>
                                 </div>
 
                                 <div class="form-group">

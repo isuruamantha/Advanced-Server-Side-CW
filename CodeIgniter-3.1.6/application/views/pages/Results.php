@@ -19,8 +19,12 @@ if (!$celebDetails)
 <div class="container">
 
     <div class="text-center center-block">
-        <button type="button" class="btn btn-success">Total count of votes  &nbsp;<span class="badge">7</span></button>
-        <button type="button" class="btn btn-success">All user votes  &nbsp;<span class="badge">7</span></button>
+        <button type="button" class="btn btn-success">Total count of votes &nbsp;<span
+                    class="badge"><?php echo $totalCountOfVotes ?></span></button>
+        <button type="button" class="btn btn-success">All registered users &nbsp;<span
+                    class="badge"><?php echo $totalCountOfUsers ?></span></button>
+        <button type="button" class="btn btn-success">Total celebrity count &nbsp;<span
+                    class="badge"><?php echo $totalCountOfCelebrities ?></span></button>
     </div>
     <h2>Celebrities with votes</h2>
     <ul class="list-group">

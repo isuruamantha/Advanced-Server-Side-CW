@@ -13,8 +13,9 @@
         <div class="col-md-4 col-md-offset-4">
             <div class="login-panel panel panel-success">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Login</h3>
+                    <h3 class="panel-title text-center center-block">Login</h3>
                 </div>
+
                 <?php
                 $success_msg = $this->session->flashdata('success_msg');
                 $error_msg = $this->session->flashdata('error_msg');
@@ -26,10 +27,13 @@
                     </div>
                     <?php
                 }
-                if ($error_msg) {
+                if ($error_msg || validation_errors()) {
                     ?>
                     <div class="alert alert-danger">
-                        <?php echo $error_msg; ?>
+                        <?php
+                        print_r($error_msg);
+                        echo validation_errors();
+                        ?>
                     </div>
                     <?php
                 }
@@ -42,13 +46,15 @@
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                                 <input class="form-control" placeholder="Username" name="userName" type="text"
-                                       autofocus>
-                            </div><br>
+                                       value="<?php echo set_value('userName'); ?>" autofocus>
+                            </div>
+                            <br>
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                                 <input class="form-control" placeholder="Password" name="userPassword" type="password"
-                                       value="">
-                            </div><br>
+                                       value="<?php echo set_value('userPassword'); ?>" value="">
+                            </div>
+                            <br>
 
                             <input class="btn btn-lg btn-success btn-block" type="submit" value="login" name="login">
 
