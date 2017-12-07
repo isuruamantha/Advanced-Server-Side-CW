@@ -3,22 +3,25 @@
 <head>
     <meta charset="utf-8">
     <title>Registration - CeleVote</title>
-
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" media="screen"
           title="no title">
+    <link rel="stylesheet" type="text/css"
+          href="<?php echo base_url(); ?>css/style.css">
 
 </head>
-<body>
+<body style="background-image: url('<?php echo base_url('uploads/background_image.jpg'); ?>');
+        background-size:cover; background-repeat:   no-repeat;
+        background-position: center center;  ">
 
 <span style="background-color:red;">
-  <div class="container">
+  <div class="container ">
       <div class="row">
           <div class="col-md-4 col-md-offset-4">
               <div class="login-panel panel panel-success">
                   <div class="panel-heading">
-                      <h3 class="panel-title text-center center-block" >Registration</h3>
+                      <h3 class="panel-title text-center center-block"><b>Registration</b></h3>
                   </div>
-                  <div class="panel-body">
+                  <div class="panel-body box-shadow">
 
                   <?php
                   $success_msg = $this->session->flashdata('success_msg');
@@ -69,12 +72,12 @@
                                          value="<?php echo set_value('userPasswordConfirm'); ?>" type="password">
                               </div><br>
 
-                              <input class="btn btn-lg btn-success btn-block" type="submit" value="Register"
+                              <input class="btn btn-lg btn-success btn-block box-shadow-button" type="submit" value="Register"
                                      name="register">
 
                           </fieldset>
                       </form>
-                      <center><b>Already registered ?</b> <br>
+                      <center style="margin-top: 8px"><b>Already registered ?</b> <br>
                           </b><a href="<?php echo base_url('userController/login_view'); ?>">Login here</a></center>
 
                   </div>

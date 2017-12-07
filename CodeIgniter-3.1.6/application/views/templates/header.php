@@ -16,10 +16,23 @@
             <a class="navbar-brand" href="<?php echo base_url(); ?>dashboardController">Celevote</a>
         </div>
         <ul class="nav navbar-nav">
-            <li class="active"><a href="<?php echo base_url(); ?>dashboardController">Home</a></li>
+            <li class="active"><a href="<?php echo base_url(); ?>dashboardController">Vote</a></li>
             <li><a href="<?php echo base_url(); ?>dashboardController/getCelebrityDetailsinDesc">Leaderboard</a></li>
             <li><a href="<?php echo base_url(); ?>dashboardController/ViewaddCelebrity">Add a celebrity</a></li>
+            <?php
+            $user_id = $this->session->userdata('userId');
+            if ($user_id) { ?>
+                <li><a href="<?php echo base_url(); ?>dashboardController/viewHistory">History</a></li>
+            <?php } ?>
         </ul>
+        <?php
+        $user_id = $this->session->userdata('userId');
+        if ($user_id) { ?>
+            <div class="navbar-header" style="float: right">
+                <a class="navbar-brand" href="<?php echo base_url('userController/user_logout'); ?>">Logout</a>
+            </div>
+        <?php } ?>
+
     </div>
 </nav>
 

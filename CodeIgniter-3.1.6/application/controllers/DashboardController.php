@@ -13,17 +13,23 @@ class DashboardController extends CI_Controller
     {
         parent::__construct();
         $this->load->helper(array('form', 'url'));
-        $this->load->model('user_model');
-        $this->load->model('celebrity_model');
+        $this->load->model(array('user_model', 'celebrity_model'));
         $this->load->library(array('session', 'upload', 'form_validation'));
     }
 
 
     public function index()
     {
-        $this->load->view("templates/header");
-        $this->load->view("pages/dashboard.php");
-        $this->load->view("templates/footer");
+        $user_id = $this->session->userdata('userId');
+        if ($user_id) {
+            $data['celebDetails'] = $this->celebrity_model->getCelebrityDetails();
+            $this->load->view("templates/header");
+            $this->load->view("pages/dashboard.php", $data);
+            $this->load->view("templates/footer");
+        }else{
+            redirect('userController/login_view');
+        }
+
     }
 
     /*
@@ -32,7 +38,7 @@ class DashboardController extends CI_Controller
     public function getCelebrityDetails()
     {
         $data['celebDetails'] = $this->celebrity_model->getCelebrityDetails();
-        $this->load->view("templates/header_logout");
+        $this->load->view("templates/header");
         $this->load->view("pages/dashboard.php", $data);
         $this->load->view("templates/footer");
     }
@@ -61,19 +67,36 @@ class DashboardController extends CI_Controller
         $this->load->view("templates/footer");
     }
 
+    /*
+     * To view the history page
+     */
+    public function viewHistory()
+    {
+        $user_id = $this->session->userdata('userId');
+        $data['userHistory'] = $this->user_model->getUserHistory($user_id);
+        $this->load->view("templates/header");
+        $this->load->view("pages/history.php", $data);
+        $this->load->view("templates/footer");
+    }
+
+    /*
+     * To logout the user
+     */
     public function user_logout()
     {
         $this->session->sess_destroy();
         redirect('user/login_view', 'refresh');
     }
 
+    /*
+     * Upload the images and other details about the celebrity
+     */
     public function do_upload()
     {
 
         $this->form_validation->set_rules('celebName', 'Celebrity Name', 'required');
         $this->form_validation->set_rules('celebDescription', 'Description', 'required');
-        if (empty($_FILES['userfile']['name']))
-        {
+        if (empty($_FILES['userfile']['name'])) {
             $this->form_validation->set_rules('userfile', 'Document', 'required');
         }
 
@@ -95,10 +118,10 @@ class DashboardController extends CI_Controller
             $this->upload->initialize($config);
             if ($this->upload->do_upload()) {
                 $data = array('upload_data' => $this->upload->data());
-                print_r($data);
             } else {
                 $error = array('error' => $this->upload->display_errors());
                 print_r($error);
+                echo $_POST;
             }
 
             $filename = $_FILES['userfile']['name'];
@@ -109,13 +132,18 @@ class DashboardController extends CI_Controller
                 'addedDate' => date("Y/m/d")
             );
             $this->celebrity_model->register_celebrity($celebrityData);
+            $data['isModelNeeded'] = true;
 
+            $data['celebDetails'] = $this->celebrity_model->getCelebrityDetails();
             $this->load->view("templates/header");
-            $this->load->view("pages/dashboard.php");
+            $this->load->view("pages/dashboard.php", $data);
             $this->load->view("templates/footer");
         }
     }
 
+    /*
+     * To vote for the user
+     */
     public function vote()
     {
         $vote = array(
@@ -124,17 +152,14 @@ class DashboardController extends CI_Controller
             'votedDate' => date("Y/m/d")
         );
 
-//        print_r($vote);
         $isResultAdded = $this->celebrity_model->addVote($vote);
         if (!$isResultAdded) {
 
         } else {
-//            $this->load->view("dashboardController/getCelebrityDetailsinDesc");
             $this->load->view("templates/header");
             $this->load->view("pages/results.php");
             $this->load->view("templates/footer");
         }
     }
-
 
 }

@@ -15,24 +15,27 @@ class Celebrity_model extends CI_model
     public function register_celebrity($celebrity)
     {
         $this->db->insert('celebritydetails', $celebrity);
-    }
 
+    }
 
     /*
      * Retreive all the celebrity details from the database
      */
     public function getCelebrityDetails()
     {
+        $id = $this->session->userdata('userId');
         $this->db->select('*');
         $this->db->from('celebritydetails');
+        $this->db->where('`id` NOT IN (SELECT `celebrityId` FROM `votes` WHERE `userId` = ' . $id . ')');
         $this->db->order_by('id', 'RANDOM');
+        $this->db->limit(2);
 
         if ($query = $this->db->get()) {
             return $query->result_array();
-
         } else {
             return false;
         }
+
     }
 
     /*
@@ -40,28 +43,23 @@ class Celebrity_model extends CI_model
      */
     public function addVote($vote)
     {
-        //$totalVoteCount = 0;
-
         $this->db->insert('votes', $vote);
-
         $this->db->select('voteCount');
         $this->db->from('celebritydetails');
         $this->db->where('id', $vote['celebrityId']);
         if ($query = $this->db->get()) {
             $totalVoteCount = ($query->result_array());
 
-            $totalVoteCount =  ($totalVoteCount[0]['voteCount']);
+            $totalVoteCount = ($totalVoteCount[0]['voteCount']);
             $totalVoteCount += 1;
 
             $data = array(
                 'voteCount' => $totalVoteCount
             );
-            print_r($data);
             $this->db->where('id', $vote['celebrityId']);
             $this->db->update('celebritydetails', $data);
 
             return $query->result_array();
-
         } else {
             return false;
         }
@@ -116,6 +114,5 @@ class Celebrity_model extends CI_model
     }
 
 }
-
 
 ?>

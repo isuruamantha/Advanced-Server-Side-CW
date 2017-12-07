@@ -5,15 +5,20 @@
     <title>Login - CeleVote</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" media="screen"
           title="no title">
+    <link rel="stylesheet" type="text/css"
+          href="<?php echo base_url(); ?>css/style.css">
+
 </head>
-<body>
+<body style="background-image: url('<?php echo base_url('uploads/background_image.jpg'); ?>');
+        background-size:cover; background-repeat:   no-repeat;
+        background-position: center center;  ">
 
 <div class="container">
     <div class="row">
         <div class="col-md-4 col-md-offset-4">
             <div class="login-panel panel panel-success">
                 <div class="panel-heading">
-                    <h3 class="panel-title text-center center-block">Login</h3>
+                    <h3 class="panel-title text-center center-block"><b>Login</b></h3>
                 </div>
 
                 <?php
@@ -38,9 +43,8 @@
                     <?php
                 }
                 ?>
-
                 <!--                Login Form-->
-                <div class="panel-body">
+                <div class="panel-body box-shadow">
                     <form role="form" method="post" action="<?php echo base_url('userController/login_user'); ?>">
                         <fieldset>
                             <div class="input-group">
@@ -56,11 +60,12 @@
                             </div>
                             <br>
 
-                            <input class="btn btn-lg btn-success btn-block" type="submit" value="login" name="login">
+                            <input class="btn btn-lg btn-success btn-block box-shadow-button" type="submit"
+                                   value="login" name="login">
 
                         </fieldset>
                     </form>
-                    <center><b>Not registered ?</b> <br></b><a
+                    <center style="margin-top: 15px"><b>Not registered ?</b> <br></b><a
                                 href="<?php echo base_url('userController/register_view'); ?>">Register
                             here</a>
                     </center>

@@ -15,7 +15,6 @@ class UserController extends CI_Controller
         $this->load->helper('url');
         $this->load->model('user_model');
         $this->load->library(array('session', 'form_validation'));
-
         $this->load->library('form_validation');
     }
 
@@ -37,7 +36,6 @@ class UserController extends CI_Controller
         $this->form_validation->set_rules('userEmail', 'Email', 'required');
         $this->form_validation->set_rules('userPassword', 'Password', 'required');
         $this->form_validation->set_rules('userPasswordConfirm', 'Password Confirmation', 'required|matches[userPassword]');
-
 
         if ($this->form_validation->run() == FALSE) {
             $this->load->view("templates/header");
@@ -63,7 +61,9 @@ class UserController extends CI_Controller
         }
     }
 
-
+/*
+ * To Load the login view
+ */
     public function login_view()
     {
         $this->load->view("templates/header");
@@ -71,6 +71,9 @@ class UserController extends CI_Controller
         $this->load->view("templates/footer");
     }
 
+    /*
+     * To Load the register view
+     */
     public function register_view()
     {
         $this->load->view("templates/header");
@@ -113,14 +116,6 @@ class UserController extends CI_Controller
                 $this->load->view("templates/footer");
             }
         }
-    }
-
-
-    function user_profile()
-    {
-        $this->load->view("templates/header");
-        $this->load->view('pages/user_profile.php');
-        $this->load->view("templates/footer");
     }
 
     /*

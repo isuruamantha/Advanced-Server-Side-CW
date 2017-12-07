@@ -65,6 +65,25 @@ class User_model extends CI_model
         }
     }
 
+    /*
+* Retreive the history of the user
+*/
+    public function getUserHistory($userId)
+    {
+        $this->db->select('*');
+        $this->db->from('votes');
+
+        $this->db->join('user', 'user.userId = votes.userId', 'left');
+        $this->db->join('celebritydetails', 'celebritydetails.id = votes.celebrityId', 'left');
+        $this->db->where('votes.userId', $userId);
+
+        if ($query = $this->db->get()) {
+            return ($query->result_array());
+        } else {
+            return false;
+        }
+    }
+
 }
 
 

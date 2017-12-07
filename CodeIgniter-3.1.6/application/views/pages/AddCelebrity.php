@@ -6,9 +6,13 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" media="screen"
           title="no title">
+    <link rel="stylesheet" type="text/css"
+          href="<?php echo base_url(); ?>css/style.css">
 
 </head>
-<body>
+<body style="background-image: url('<?php echo base_url('uploads/background_image.jpg'); ?>');
+        background-size:cover; background-repeat:   no-repeat;
+        background-position: center center;  ">
 
 <span style="background-color:red;">
   <div class="container">
@@ -16,9 +20,9 @@
           <div class="col-md-4 col-md-offset-4">
               <div class="login-panel panel panel-success">
                   <div class="panel-heading">
-                      <h3 class="panel-title">Add a Celebrity</h3>
+                      <h3 class="panel-title text-center center-block"><b>Add a Celebrity</b></h3>
                   </div>
-                  <div class="panel-body">
+                  <div class="panel-body box-shadow">
 
                   <?php
                   $success_msg = $this->session->flashdata('success_msg');
@@ -61,7 +65,7 @@
                                      <input type="file" name="userfile" size="20"/>
                                 </div>
 
-                          <input class="btn btn-lg btn-success btn-block" type="submit" value="Upload"
+                          <input class="btn btn-lg btn-success btn-block box-shadow-button" type="submit" value="Upload"
                                  name="register">
 
                           <?php echo form_close() ?>
