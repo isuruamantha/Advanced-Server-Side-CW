@@ -50,12 +50,14 @@
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                                 <input class="form-control" placeholder="Username" name="userName" type="text"
+                                       maxlength="40"
                                        value="<?php echo set_value('userName'); ?>" autofocus>
                             </div>
                             <br>
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                                 <input class="form-control" placeholder="Password" name="userPassword" type="password"
+                                       maxlength="10"
                                        value="<?php echo set_value('userPassword'); ?>" value="">
                             </div>
                             <br>

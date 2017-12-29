@@ -51,28 +51,32 @@
                               <div class="input-group">
                                   <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                                   <input class="form-control" placeholder="Username" name="userName" type="text"
+                                         maxlength="40"
                                          value="<?php echo set_value('userName'); ?>" autofocus>
                               </div><br>
 
                               <div class="input-group">
                                   <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
                                   <input class="form-control" placeholder="Email Address" name="userEmail" type="email"
+                                         maxlength="40"
                                          value="<?php echo set_value('userEmail'); ?>" autofocus>
                               </div><br>
 
                               <div class="input-group">
                                   <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                                  <input class="form-control" placeholder="Password" name="userPassword"
+                                  <input class="form-control" placeholder="Password" name="userPassword" maxlength="10"
                                          value="<?php echo set_value('userPassword'); ?>" type="password">
                               </div><br>
 
                               <div class="input-group">
                                   <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                                   <input class="form-control" placeholder="Confirm Password" name="userPasswordConfirm"
+                                         maxlength="10"
                                          value="<?php echo set_value('userPasswordConfirm'); ?>" type="password">
                               </div><br>
 
-                              <input class="btn btn-lg btn-success btn-block box-shadow-button" type="submit" value="Register"
+                              <input class="btn btn-lg btn-success btn-block box-shadow-button" type="submit"
+                                     value="Register"
                                      name="register">
 
                           </fieldset>

@@ -52,11 +52,13 @@
                       <fieldset>
                               <div class="form-group">
                                   <input class="form-control" placeholder="Celebrity Name" name="celebName" type="text"
+                                         maxlength="40"
                                          value="<?php echo set_value('celebName'); ?>" autofocus>
                               </div>
 
                                 <div class="form-group">
                                   <input class="form-control" placeholder="Description" name="celebDescription"
+                                         maxlength="100"
                                          type="text" value="<?php echo set_value('celebDescription'); ?>" autofocus>
                                 </div>
 
