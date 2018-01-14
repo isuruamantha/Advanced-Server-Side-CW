@@ -14,11 +14,10 @@ class Item extends REST_Controller
     /*
      * Get item lists
      */
-    public function getitems_get()
+    public function index_get($listId)
     {
-        $listId = $this->get('listId');
 
-        if (!$listId ) {
+        if (!$listId) {
             $this->response("Please fill the relevant data", 400);
         } else {
             $result = $this->ItemModel->getItems($listId);
@@ -33,7 +32,7 @@ class Item extends REST_Controller
     /*
      * Create a list
      */
-    public function create_post()
+    public function index_post()
     {
         $itemName = $this->post('itemName');
         $itemDetails = $this->post('itemDetails');
@@ -58,7 +57,7 @@ class Item extends REST_Controller
     /*
      * Update the item list
      */
-    public function update_put()
+    public function index_put()
     {
         $itemId = $this->put('itemId');
         $itemName = $this->put('itemName');
@@ -84,14 +83,12 @@ class Item extends REST_Controller
     /*
      * Delete an item
      */
-    public function delete_delete()
+    public function index_delete($id)
     {
-        $id = $this->delete('id');
 
         if (!$id) {
             $this->response("Please fill the relevant data", 400);
         }
-
         if ($this->ItemModel->deleteItem($id)) {
             $this->response("Success", 200);
         } else {

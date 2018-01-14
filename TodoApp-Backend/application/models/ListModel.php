@@ -33,7 +33,36 @@ class ListModel extends CI_model
     {
     }
 
+    /*
+     * Get all lists according the user id
+     */
+    public function getLists($userId)
+    {
+        $this->db->select('*');
+        $this->db->from('listsdetails');
+        $this->db->where('userId', $userId);
 
+        if ($query = $this->db->get()) {
+            return $query->result_array();
+        } else {
+            return false;
+        }
+    }
+
+    /*
+     * Get all lists
+     */
+    public function getAllLists()
+    {
+        $this->db->select('*');
+        $this->db->from('listsdetails');
+
+        if ($query = $this->db->get()) {
+            return $query->result_array();
+        } else {
+            return false;
+        }
+    }
 }
 
 
