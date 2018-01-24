@@ -23,6 +23,7 @@ $(document).ready(function () {
                         alert("Error credentials")
                     } else {
                         alert("Success");
+                        window.location = "Dashboard.html";
                     }
                 }
             });

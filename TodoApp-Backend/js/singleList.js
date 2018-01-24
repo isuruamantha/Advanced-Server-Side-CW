@@ -35,6 +35,7 @@ app.TodoList = Backbone.Collection.extend({
 app.todoList = new app.TodoList();
 
 
+
 // Views
 
 // renders individual todo items list (li)
@@ -44,20 +45,19 @@ app.TodoView = Backbone.View.extend({
     render: function () {
         this.$el.html(this.template(this.model.toJSON()));
         this.input = this.$('.edit');
-        return this; //
+        return this; // enable chained calls
     },
     initialize: function () {
         this.model.on('change', this.render, this);
         this.model.on('destroy', this.remove, this);
-        this.model.on('editList', this.remove, this);
+        this.model.on('destroy', this.remove, this);
     },
     events: {
         'dblclick label': 'edit',
         'keypress .edit': 'updateOnEnter',
         'blur .edit': 'close',
         'click .toggle': 'toggleCompleted',
-        'click .destroy': 'destroy',
-        'click .editList': 'editList'
+        'click .destroy': 'destroy'
     },
     edit: function () {
         this.$el.addClass('editing');
@@ -80,10 +80,6 @@ app.TodoView = Backbone.View.extend({
     },
     destroy: function () {
         this.model.destroy();
-    },
-    editList: function () {
-        alert("hello");
-        window.location = "http://localhost/Server_Side_CW1/TodoApp-Backend/dashboardController/";
     }
 });
 

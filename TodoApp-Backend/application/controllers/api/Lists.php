@@ -1,10 +1,11 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+header('Access-Control-Allow-Origin: *');
 require APPPATH . 'libraries/REST_Controller.php';
 
 /**
  * Created by PhpStorm.
- * User: user
+ * User: Isuru Amantha
  * Date: 1/2/2018
  * Time: 4:39 PM
  */
@@ -70,5 +71,17 @@ class Lists extends REST_Controller
                 $this->response("Success", 200);
             }
         }
+    }
+
+
+    /*
+    * Delete an item
+    */
+    public function index_delete($id = 0)
+    {
+        if ($this->ListModel->deleteList($id)) {
+            $this->response("Success", 200);
+        }
+
     }
 }

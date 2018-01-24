@@ -2,15 +2,15 @@
  * Created by Isuru Amantha on 1/8/2018.
  */
 
+
 $(document).ready(function () {
     $("#login").click(function () {
 
         var username = $("#userName").val();
         var password = $("#password").val();
 
-        // alert(username);
-
         $.ajax({
+
             type: "POST",
             url: "http://localhost/Server_Side_CW1/TodoApp-Backend/api/user/login",
             data: "userName=" + username + "&userPassword=" + password,
@@ -20,7 +20,13 @@ $(document).ready(function () {
                     alert("Error credentials")
                 } else {
                     alert("Success");
-                    window.location = "http://localhost/Server_Side_CW1/TodoApp-Backend/dashboardController";
+
+                    // Store the data into local storage
+                    localStorage.setItem("userId", response.userId);
+                    localStorage.setItem("userName", response.userName);
+                    localStorage.setItem("userEmail", response.userEmail);
+                    console.log(response);
+                    window.location = "Dashboard.html";
                 }
             }
         });

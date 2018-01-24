@@ -29,8 +29,14 @@ class ListModel extends CI_model
     /*
     * Delete list
     */
-    public function deleteList($list)
+    public function deleteList($listId)
     {
+        $this->db->where('listId', $listId);
+        if ($this->db->delete('listsdetails')) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /*
