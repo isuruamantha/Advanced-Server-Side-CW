@@ -276,7 +276,7 @@ abstract class REST_Controller extends CI_Controller {
     protected $_allow = TRUE;
 
     /**
-     * The LDAP Distinguished Name of the User post authentication
+     * The LDAP Distinguished Name of the Users post authentication
      *
      * @var string
      */
@@ -1869,7 +1869,7 @@ abstract class REST_Controller extends CI_Controller {
         // Search for user
         if (($res_id = ldap_search($ldapconn, $ldap['basedn'], "uid=$username")) === FALSE)
         {
-            log_message('error', 'LDAP Auth: User '.$username.' not found in search');
+            log_message('error', 'LDAP Auth: Users '.$username.' not found in search');
             return FALSE;
         }
 
@@ -1891,7 +1891,7 @@ abstract class REST_Controller extends CI_Controller {
             return FALSE;
         }
 
-        // User found, could not authenticate as user
+        // Users found, could not authenticate as user
         if (($link_id = ldap_bind($ldapconn, $user_dn, $password)) === FALSE)
         {
             log_message('error', 'LDAP Auth: Failure, username/password did not match: ' . $user_dn);

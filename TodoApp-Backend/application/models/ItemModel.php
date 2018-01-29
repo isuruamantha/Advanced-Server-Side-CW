@@ -14,7 +14,7 @@ class ItemModel extends CI_model
      */
     public function createItem($item)
     {
-        $this->db->insert('itemdetails', $item);
+        $this->db->insert('items', $item);
     }
 
     /*
@@ -23,7 +23,7 @@ class ItemModel extends CI_model
     public function updateItem($item)
     {
         $this->db->where('itemId', $item['itemId']);
-        $this->db->update('itemdetails', $item);
+        $this->db->update('items', $item);
     }
 
 
@@ -33,7 +33,7 @@ class ItemModel extends CI_model
     public function deleteItem($item)
     {
         $this->db->where('itemId', $item);
-        if ($this->db->delete('itemdetails')) {
+        if ($this->db->delete('items')) {
             return true;
         } else {
             return false;
@@ -46,8 +46,10 @@ class ItemModel extends CI_model
     public function getItems($lisId)
     {
         $this->db->select('*');
-        $this->db->from('itemdetails');
+        $this->db->from('items');
         $this->db->where('listId', $lisId);
+        $this->db->order_by("deadline", "asc");
+        $this->db->order_by("priority", "desc");
 
         if ($query = $this->db->get()) {
             return $query->result_array();

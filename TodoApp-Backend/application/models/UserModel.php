@@ -14,7 +14,7 @@ class UserModel extends CI_model
      */
     public function registerUser($user)
     {
-        $this->db->insert('user', $user);
+        $this->db->insert('users', $user);
     }
 
     /*
@@ -23,7 +23,7 @@ class UserModel extends CI_model
     public function loginUser($userName, $password)
     {
         $this->db->select('*');
-        $this->db->from('user');
+        $this->db->from('users');
         $this->db->where('userName', $userName);
         $this->db->where('userPassword', $password);
 
@@ -40,7 +40,7 @@ class UserModel extends CI_model
     public function emailCheck($email)
     {
         $this->db->select('*');
-        $this->db->from('user');
+        $this->db->from('users');
         $this->db->where('userEmail', $email);
         $query = $this->db->get();
         if ($query->num_rows() > 0) {

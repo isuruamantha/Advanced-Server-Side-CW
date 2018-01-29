@@ -14,7 +14,7 @@ class ListModel extends CI_model
      */
     public function createList($user)
     {
-        $this->db->insert('listsdetails', $user);
+        $this->db->insert('lists', $user);
     }
 
     /*
@@ -23,7 +23,7 @@ class ListModel extends CI_model
     public function updateList($list)
     {
         $this->db->where('listId', $list['listId']);
-        $this->db->update('listsdetails', $list);
+        $this->db->update('lists', $list);
     }
 
     /*
@@ -32,7 +32,7 @@ class ListModel extends CI_model
     public function deleteList($listId)
     {
         $this->db->where('listId', $listId);
-        if ($this->db->delete('listsdetails')) {
+        if ($this->db->delete('lists')) {
             return true;
         } else {
             return false;
@@ -45,7 +45,7 @@ class ListModel extends CI_model
     public function getLists($userId)
     {
         $this->db->select('*');
-        $this->db->from('listsdetails');
+        $this->db->from('lists');
         $this->db->where('userId', $userId);
 
         if ($query = $this->db->get()) {
@@ -61,7 +61,7 @@ class ListModel extends CI_model
     public function getAllLists()
     {
         $this->db->select('*');
-        $this->db->from('listsdetails');
+        $this->db->from('lists');
 
         if ($query = $this->db->get()) {
             return $query->result_array();

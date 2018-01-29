@@ -1,103 +1,96 @@
-/**
- * Created by Isuru Amantha on 1/8/2018.
- */
+var userId = localStorage.getItem("userId");
+console.log("userId " + userId);
 
-'use strict';
+/*
+ To view/remove logout button
+ */
+if (localStorage.getItem("userName") != null) {
+    document.getElementById("logout").innerHTML = "Logout";
+} else {
+    document.getElementById("logout").innerHTML = "";
+}
+
 
 var app = {};
 
 // Models
 app.Todo = Backbone.Model.extend({
-    defaults: {
-        title: '',
-        completed: false
-    },
-    toggle: function () {
-        this.save({completed: !this.get('completed')});
-    }
+    idAttribute: "listId",
+    urlRoot: "http://localhost/Server_Side_CW1/TodoApp-Backend/api/lists/"
 });
-
 // Collections
 app.TodoList = Backbone.Collection.extend({
     model: app.Todo,
-    localStorage: new Store("backbone-todo"),
-    completed: function () {
-        return this.filter(function (todo) {
-            return todo.get('completed');
-        });
-    },
-    remaining: function () {
-        return this.without.apply(this, this.completed());
-    }
+    url: "http://localhost/Server_Side_CW1/TodoApp-Backend/api/lists/"
 });
 
 // instance of the Collection
 app.todoList = new app.TodoList();
 
-
-// Views
-
 // renders individual todo items list (li)
 app.TodoView = Backbone.View.extend({
-    tagName: 'li',
+    tagName: 'tr',
     template: _.template($('#item-template').html()),
     render: function () {
         this.$el.html(this.template(this.model.toJSON()));
-        this.input = this.$('.edit');
-        return this; //
-    },
-    initialize: function () {
-        this.model.on('change', this.render, this);
-        this.model.on('destroy', this.remove, this);
-        this.model.on('editList', this.remove, this);
+        return this; // enable chained calls
     },
     events: {
-        'dblclick label': 'edit',
-        'keypress .edit': 'updateOnEnter',
-        'blur .edit': 'close',
-        'click .toggle': 'toggleCompleted',
-        'click .destroy': 'destroy',
-        'click .editList': 'editList'
+        'click #delete': 'deleteOne',
+        'click #viewItem': 'viewItem',
+        'click #edit': 'editList'
     },
-    edit: function () {
-        this.$el.addClass('editing');
-        this.input.focus();
+    editList: function (e) {
+        console.log(this.model.toJSON);
+        app.currentList = this.model;
     },
-    close: function () {
-        var value = this.input.val().trim();
-        if (value) {
-            this.model.save({title: value});
-        }
-        this.$el.removeClass('editing');
-    },
-    updateOnEnter: function (e) {
-        if (e.which == 13) {
-            this.close();
-        }
-    },
-    toggleCompleted: function () {
-        this.model.toggle();
-    },
-    destroy: function () {
+    deleteOne: function (e) {
+        console.log("delete");
+        console.log(this.model);
         this.model.destroy();
     },
-    editList: function () {
-        alert("hello");
-        window.location = "http://localhost/Server_Side_CW1/TodoApp-Backend/dashboardController/";
+    viewItem: function (e) {
+        var listId = (this.model.get("listId"));
+        console.log(listId);
+        localStorage.setItem("listId", listId);
+        window.location = "SingleList.html";
     }
 });
 
-// renders the full list of todo items calling TodoView for each one.
+
 app.AppView = Backbone.View.extend({
     el: '#todoapp',
     initialize: function () {
         this.input = this.$('#new-todo');
-        app.todoList.on('add', this.addAll, this);
+        app.todoList.on('add', this.addOne, this);
         app.todoList.on('reset', this.addAll, this);
-        app.todoList.fetch(); // Loads list from local storage
+        app.todoList.fetch({
+            url: "http://localhost/Server_Side_CW1/TodoApp-Backend/api/lists/" + userId
+        });
     },
     events: {
-        'keypress #new-todo': 'createTodoOnEnter'
+        'click #saveList': 'saveList',
+        'keypress #new-todo': 'createTodoOnEnter',
+        'click #update-saveButton': 'updateListName'
+    },
+    saveList: function () {
+        var val = $("#newname").val()
+        var newtodo = new app.Todo;
+        newtodo.set('listName', val);
+        newtodo.set('userId', userId);
+        console.log(newtodo.toJSON());
+        newtodo.save();
+        $('#listview').html('');
+        app.todoList.fetch();
+    },
+    updateListName: function (e) {
+        var listId = $("#listId-updated").val();
+        var listName = $("#listNameNew").val();
+        var newtodo = new app.Todo;
+        newtodo.set('listId', listId);
+        newtodo.set('listName', listName);
+        console.log(newtodo.toJSON());
+        newtodo.save();
     },
     createTodoOnEnter: function (e) {
         if (e.which !== 13 || !this.input.val().trim()) { // ENTER_KEY = 13
@@ -108,22 +101,11 @@ app.AppView = Backbone.View.extend({
     },
     addOne: function (todo) {
         var view = new app.TodoView({model: todo});
-        $('#todo-list').append(view.render().el);
+        $('#listview').append(view.render().el);
     },
     addAll: function () {
         this.$('#todo-list').html(''); // clean the todo list
-        // filter todo item list
-        switch (window.filter) {
-            case 'pending':
-                _.each(app.todoList.remaining(), this.addOne);
-                break;
-            case 'completed':
-                _.each(app.todoList.completed(), this.addOne);
-                break;
-            default:
-                app.todoList.each(this.addOne, this);
-                break;
-        }
+        app.todoList.each(this.addOne, this);
     },
     newAttributes: function () {
         return {
@@ -133,21 +115,20 @@ app.AppView = Backbone.View.extend({
     }
 });
 
-
-// Routers
-app.Router = Backbone.Router.extend({
-    routes: {
-        '*filter': 'setFilter'
-    },
-    setFilter: function (params) {
-        console.log('app.router.params = ' + params);
-        window.filter = params.trim() || '';
-        app.todoList.trigger('reset');
-    }
-});
-
-
-// Initializers
-app.router = new app.Router();
-Backbone.history.start();
 app.appView = new app.AppView();
+
+/*
+ Logout function
+ */
+function logout() {
+    localStorage.clear();
+    window.location = "Login.html";
+}
+
+// Set data to the modal
+$('#editModal').on('show.bs.modal', function (e) {
+    var listName = $(e.relatedTarget).data('list-name');
+    var listId = $(e.relatedTarget).data('list-id');
+    $(e.currentTarget).find('input[name="listNameNew"]').val(listName);
+    $(e.currentTarget).find('input[name="listId-updated"]').val(listId);
+});

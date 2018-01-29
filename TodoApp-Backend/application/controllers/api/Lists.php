@@ -5,7 +5,7 @@ require APPPATH . 'libraries/REST_Controller.php';
 
 /**
  * Created by PhpStorm.
- * User: Isuru Amantha
+ * Users: Isuru Amantha
  * Date: 1/2/2018
  * Time: 4:39 PM
  */
@@ -23,7 +23,8 @@ class Lists extends REST_Controller
         } else {
             $result = $this->ListModel->getLists($userId);
             if ($result === false) {
-                $this->response("Error", 200);
+                $resposnse = array("message" => "Error", "code" => "001");
+                $this->response($resposnse, 200);
             } else {
                 $this->response($result, 200);
             }
@@ -38,17 +39,19 @@ class Lists extends REST_Controller
     {
         $listName = $this->post('listName');
         $userId = $this->post('userId');
-        $itemCount = 0;
 
         if (!$listName) {
-            $this->response("Please fill the relevant data", 400);
+            $resposnse = array("message" => "Please fill the relevant data", "code" => "001");
+            $this->response($resposnse, 400);
         } else {
-            $result = $this->ListModel->createList(array("listName" => $listName, "itemCount" => $itemCount,
+            $result = $this->ListModel->createList(array("listName" => $listName,
                 "userId" => $userId));
             if ($result === 0) {
-                $this->response("Error", 404);
+                $resposnse = array("message" => "Error", "code" => "001");
+                $this->response($resposnse, 404);
             } else {
-                $this->response("Success", 200);
+                $resposnse = array("message" => "Success", "code" => "001");
+                $this->response($resposnse, 200);
             }
         }
     }
@@ -66,9 +69,11 @@ class Lists extends REST_Controller
         } else {
             $result = $this->ListModel->updateList(array("listId" => $listId, "listName" => $listName));
             if ($result === 0) {
-                $this->response("Error", 404);
+                $resposnse = array("message" => "Error", "code" => "001");
+                $this->response($resposnse, 404);
             } else {
-                $this->response("Success", 200);
+                $resposnse = array("message" => "Success", "code" => "001");
+                $this->response($resposnse, 200);
             }
         }
     }
@@ -77,10 +82,11 @@ class Lists extends REST_Controller
     /*
     * Delete an item
     */
-    public function index_delete($id = 0)
+    public function index_delete($id)
     {
         if ($this->ListModel->deleteList($id)) {
-            $this->response("Success", 200);
+            $resposnse = array("message" => "Success", "code" => "001");
+            $this->response($resposnse, 200);
         }
 
     }

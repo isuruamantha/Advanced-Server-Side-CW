@@ -435,7 +435,7 @@ class CI_Cart {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Remove Item
+	 * Remove Items
 	 *
 	 * Removes an item from the cart
 	 *

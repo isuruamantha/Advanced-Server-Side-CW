@@ -202,7 +202,7 @@ class Format {
             if (is_numeric($key))
             {
                 // make string key...
-                $key = (singular($basenode) != $basenode) ? singular($basenode) : 'item';
+                $key = (singular($basenode) != $basenode) ? singular($basenode) : 'Items';
             }
 
             // replace anything not alpha numeric

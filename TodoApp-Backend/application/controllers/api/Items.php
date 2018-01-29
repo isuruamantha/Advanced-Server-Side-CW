@@ -5,11 +5,11 @@ require APPPATH . 'libraries/REST_Controller.php';
 
 /**
  * Created by PhpStorm.
- * User: Isuru Amantha
+ * Users: Isuru Amantha
  * Date: 1/2/2018
  * Time: 4:39 PM
  */
-class Item extends REST_Controller
+class Items extends REST_Controller
 {
 
     /*
@@ -19,11 +19,13 @@ class Item extends REST_Controller
     {
 
         if (!$listId) {
-            $this->response("Please fill the relevant data", 400);
+            $resposnse = array("message" => "Please fill the relevant data", "code" => "001");
+            $this->response($resposnse, 400);
         } else {
             $result = $this->ItemModel->getItems($listId);
             if ($result === false) {
-                $this->response("Error", 404);
+                $resposnse = array("message" => "Error", "code" => "001");
+                $this->response($resposnse, 404);
             } else {
                 $this->response($result, 200);
             }
@@ -41,16 +43,34 @@ class Item extends REST_Controller
         $deadline = $this->post('deadline');
         $listId = $this->post('listId');
 
+        /*
+         * Priority level
+         * 1 - low
+         * 2 - medium
+         * 3 - high
+         */
+
+        $priority == strtolower($priority);
+        if ($priority == "low") {
+            $priority = 1;
+        } else if ($priority == "medium") {
+            $priority = 2;
+        } else {
+            $priority = 3;
+        }
 
         if (!$itemName || !$itemDetails || !$priority || !$listId || !$deadline) {
-            $this->response("Please fill the relevant data", 400);
+            $resposnse = array("message" => "Error", "code" => "001");
+            $this->response($resposnse, 400);
         } else {
             $result = $this->ItemModel->createItem(array("itemName" => $itemName, "itemDetails" => $itemDetails,
                 "priority" => $priority, "listId" => $listId, "deadline" => $deadline));
             if ($result === 0) {
-                $this->response("Error", 404);
+                $resposnse = array("message" => "Error", "code" => "001");
+                $this->response($resposnse, 404);
             } else {
-                $this->response("Success", 200);
+                $resposnse = array("message" => "Success", "code" => "001");
+                $this->response($resposnse, 200);
             }
         }
     }
@@ -67,16 +87,27 @@ class Item extends REST_Controller
         $deadline = $this->put('deadline');
         $listId = $this->put('listId');
 
+        $priority == strtolower($priority);
+        if ($priority == "low") {
+            $priority = 1;
+        } else if ($priority == "medium") {
+            $priority = 2;
+        } else {
+            $priority = 3;
+        }
 
         if (!$itemName || !$itemDetails || !$priority || !$listId || !$deadline || !$itemId) {
-            $this->response("Please fill the relevant data", 400);
+            $resposnse = array("message" => "Please fill the relevant data", "code" => "001");
+            $this->response($resposnse, 400);
         } else {
             $result = $this->ItemModel->updateItem(array("itemName" => $itemName, "itemDetails" => $itemDetails,
                 "priority" => $priority, "listId" => $listId, "deadline" => $deadline, "itemId" => $itemId));
             if ($result === 0) {
-                $this->response("Error", 404);
+                $resposnse = array("message" => "Error", "code" => "001");
+                $this->response($resposnse, 404);
             } else {
-                $this->response("Success", 200);
+                $resposnse = array("message" => "Success", "code" => "001");
+                $this->response($resposnse, 200);
             }
         }
     }
@@ -88,12 +119,15 @@ class Item extends REST_Controller
     {
 
         if (!$id) {
-            $this->response("Please fill the relevant data", 400);
+            $resposnse = array("message" => "Please fill the relevant data", "code" => "001");
+            $this->response($resposnse, 400);
         }
         if ($this->ItemModel->deleteItem($id)) {
-            $this->response("Success", 200);
+            $resposnse = array("message" => "Success", "code" => "001");
+            $this->response($resposnse, 200);
         } else {
-            $this->response("Failed", 404);
+            $resposnse = array("message" => "Failed", "code" => "001");
+            $this->response($resposnse, 404);
         }
 
     }

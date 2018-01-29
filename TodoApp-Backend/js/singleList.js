@@ -1,99 +1,112 @@
-/**
- * Created by Isuru Amantha on 1/8/2018.
- */
-
-'use strict';
-
 var app = {};
+var listId = localStorage.getItem("listId");
 
 // Models
 app.Todo = Backbone.Model.extend({
-    defaults: {
-        title: '',
-        completed: false
-    },
-    toggle: function () {
-        this.save({completed: !this.get('completed')});
-    }
+    idAttribute: "itemId",
+    urlRoot: "http://localhost/Server_Side_CW1/TodoApp-Backend/api/items/"
 });
 
 // Collections
 app.TodoList = Backbone.Collection.extend({
     model: app.Todo,
-    localStorage: new Store("backbone-todo"),
-    completed: function () {
-        return this.filter(function (todo) {
-            return todo.get('completed');
-        });
-    },
-    remaining: function () {
-        return this.without.apply(this, this.completed());
-    }
+    url: "http://localhost/Server_Side_CW1/TodoApp-Backend/api/items/"
 });
 
 // instance of the Collection
 app.todoList = new app.TodoList();
 
-
-
-// Views
-
 // renders individual todo items list (li)
 app.TodoView = Backbone.View.extend({
-    tagName: 'li',
+    tagName: 'tr',
     template: _.template($('#item-template').html()),
     render: function () {
         this.$el.html(this.template(this.model.toJSON()));
-        this.input = this.$('.edit');
         return this; // enable chained calls
     },
-    initialize: function () {
-        this.model.on('change', this.render, this);
-        this.model.on('destroy', this.remove, this);
-        this.model.on('destroy', this.remove, this);
-    },
     events: {
-        'dblclick label': 'edit',
-        'keypress .edit': 'updateOnEnter',
-        'blur .edit': 'close',
-        'click .toggle': 'toggleCompleted',
-        'click .destroy': 'destroy'
+        'click #delete': 'deleteOne',
+        'click #viewItem': 'viewItem'
     },
-    edit: function () {
-        this.$el.addClass('editing');
-        this.input.focus();
-    },
-    close: function () {
-        var value = this.input.val().trim();
-        if (value) {
-            this.model.save({title: value});
-        }
-        this.$el.removeClass('editing');
-    },
-    updateOnEnter: function (e) {
-        if (e.which == 13) {
-            this.close();
-        }
-    },
-    toggleCompleted: function () {
-        this.model.toggle();
-    },
-    destroy: function () {
+    deleteOne: function (e) {
+        console.log(this.model.toJSON);
+        console.log(this.model)
         this.model.destroy();
+        // this.$('#todo-list').html(''); // clean the todo list
+        // app.todoList.each(this.addOne, this);
+    },
+    viewItem: function (e) {
+        console.log(this.model);
+        window.location = "SingleList.html";
     }
 });
 
-// renders the full list of todo items calling TodoView for each one.
 app.AppView = Backbone.View.extend({
     el: '#todoapp',
     initialize: function () {
         this.input = this.$('#new-todo');
-        app.todoList.on('add', this.addAll, this);
+        app.todoList.on('add', this.addOne, this);
         app.todoList.on('reset', this.addAll, this);
-        app.todoList.fetch(); // Loads list from local storage
+        app.todoList.fetch({
+            url: "http://localhost/Server_Side_CW1/TodoApp-Backend/api/items/" + listId
+        });
     },
     events: {
-        'keypress #new-todo': 'createTodoOnEnter'
+        'click #saveList': 'saveList',
+        'keypress #new-todo': 'createTodoOnEnter',
+        'click #update-saveButton': 'updateListName'
+    },
+    updateListName: function (e) {
+        var itemId = $("#edited-item-id").val();
+        var itemName = $("#edited-newname").val();
+        var itemDetails = $("#edited-itemDetails").val();
+        var priority = $("#priority").val();
+        var deadline = $("#datepicker").val();
+
+        if (document.getElementById('edited-high').checked) {
+            priority = "High"
+        } else if (document.getElementById('edited-medium').checked) {
+            priority = "Medium"
+        } else {
+            priority = "Low"
+        }
+
+        var newtodo = new app.Todo;
+        newtodo.set('itemId', itemId);
+        newtodo.set('itemName', itemName);
+        newtodo.set('itemDetails', itemDetails);
+        newtodo.set('priority', priority);
+        newtodo.set('deadline', deadline);
+        newtodo.set('listId', listId);
+        newtodo.save();
+    },
+    saveList: function (e) {
+        var newname = $("#newname").val();
+        var itemDetails = $("#itemDetails").val();
+        var priority = $("#priority").val();
+        var deadline = $("#newDatePicker").val();
+
+        console.log("workin");
+
+        if (document.getElementById('high').checked) {
+            priorityLevel = document.getElementById('high').value;
+        } else if (document.getElementById('medium').checked) {
+            priorityLevel = document.getElementById('medium').value;
+        } else {
+            priorityLevel = document.getElementById('low').value;
+        }
+
+        var newtodo = new app.Todo;
+
+        newtodo.save({
+            itemName: newname, itemDetails: itemDetails,
+            priority: priorityLevel, deadline: deadline,
+            listId: listId,
+        });
+        $('#listview').html('');
+        app.todoList.fetch({
+            url: "http://localhost/Server_Side_CW1/TodoApp-Backend/api/items/" + listId
+        });
     },
     createTodoOnEnter: function (e) {
         if (e.which !== 13 || !this.input.val().trim()) { // ENTER_KEY = 13
@@ -104,22 +117,11 @@ app.AppView = Backbone.View.extend({
     },
     addOne: function (todo) {
         var view = new app.TodoView({model: todo});
-        $('#todo-list').append(view.render().el);
+        $('#listview').append(view.render().el);
     },
     addAll: function () {
         this.$('#todo-list').html(''); // clean the todo list
-        // filter todo item list
-        switch (window.filter) {
-            case 'pending':
-                _.each(app.todoList.remaining(), this.addOne);
-                break;
-            case 'completed':
-                _.each(app.todoList.completed(), this.addOne);
-                break;
-            default:
-                app.todoList.each(this.addOne, this);
-                break;
-        }
+        app.todoList.each(this.addOne, this);
     },
     newAttributes: function () {
         return {
@@ -129,21 +131,45 @@ app.AppView = Backbone.View.extend({
     }
 });
 
+app.appView = new app.AppView();
 
-// Routers
-app.Router = Backbone.Router.extend({
-    routes: {
-        '*filter': 'setFilter'
-    },
-    setFilter: function (params) {
-        console.log('app.router.params = ' + params);
-        window.filter = params.trim() || '';
-        app.todoList.trigger('reset');
+/*
+ Logout function
+ */
+function logout() {
+    localStorage.clear();
+    window.location = "Login.html";
+}
+
+// Set data to the modal
+$('#editItemModal').on('show.bs.modal', function (e) {
+    var itemId = $(e.relatedTarget).data('item-id');
+    var itemName = $(e.relatedTarget).data('item-name');
+    var itemDetails = $(e.relatedTarget).data('item-details');
+    var itemPriority = $(e.relatedTarget).data('item-priority');
+    var itemDeadline = $(e.relatedTarget).data('item-deadline');
+
+    console.log(itemDeadline);
+
+    $(e.currentTarget).find('input[name="edited-newname"]').val(itemName);
+    $(e.currentTarget).find('input[name="edited-item-id"]').val(itemId);
+    $(e.currentTarget).find('input[name="edited-itemDetails"]').val(itemDetails);
+
+    if (itemPriority == "High") {
+        $("#edited-high").prop("checked", true);
+    } else if (itemPriority == "Medium") {
+        $("#edited-medium").prop("checked", true);
+    } else {
+        $("#edited-low").prop("checked", true);
     }
+    document.getElementById('datepicker').value = new Date().toDateInputValue();
+
 });
 
 
-// Initializers
-app.router = new app.Router();
-Backbone.history.start();
-app.appView = new app.AppView();
+// To set the default date
+Date.prototype.toDateInputValue = (function () {
+    var local = new Date(this);
+    local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+    return local.toJSON().slice(0, 10);
+});
