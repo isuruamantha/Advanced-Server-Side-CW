@@ -52,7 +52,18 @@ class ItemModel extends CI_model
         $this->db->order_by("priority", "desc");
 
         if ($query = $this->db->get()) {
-            return $query->result_array();
+            $array = $query->result_array();
+
+            foreach ($array as &$row) {
+                if ($row['priority'] == '1') {
+                    $row['priority'] = 'Low';
+                }else if ($row['priority'] == '2'){
+                    $row['priority'] = 'Medium';
+                }else{
+                    $row['priority'] = 'High';
+                }
+            }
+            return $array;
         } else {
             return false;
         }

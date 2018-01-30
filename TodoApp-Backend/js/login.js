@@ -32,24 +32,18 @@ $(document).ready(function () {
                 url: "http://localhost/Server_Side_CW1/TodoApp-Backend/api/users/login",
                 data: "userName=" + username + "&userPassword=" + password,
                 success: function (response) {
-
-                    if (response == "Please enter valid data" | response == "Error credentials") {
+                    if (response['message'] == "Please enter valid data" | response['message'] == "Error credentials") {
                         alert("Error credentials")
                     } else {
-                        alert("Success");
-
                         // Store the data into local storage
                         localStorage.setItem("userId", response.userId);
                         localStorage.setItem("userName", response.userName);
                         localStorage.setItem("userEmail", response.userEmail);
-                        console.log(response);
                         window.location = "Dashboard.html";
                     }
                 }
             });
         }
-
-
         return false;
 
     });
@@ -81,7 +75,7 @@ $(document).ready(function () {
                     data: "userName=" + username + "&userPassword=" + userPassword + "&userEmail=" + userEmail,
                     success: function (response) {
 
-                        if (response == "Enter complete user information to save" | response == "Email already found") {
+                        if (response['message'] == "Enter complete user information to save" | response['message'] == "Email already found") {
                             alert("Email already found!")
                         } else {
                             alert("Success");

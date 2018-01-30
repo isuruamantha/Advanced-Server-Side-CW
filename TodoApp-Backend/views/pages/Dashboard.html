@@ -30,7 +30,7 @@
     </div>
 </nav>
 
-<div class="container" id="todoapp">
+<div class="container remove-container" id="todoapp">
     <div class="col-md-12 text-center">
         <a href="#myModal" class="btn btn-primary btn-sm center" data-toggle="modal"><b>+</b>
             Add a new list</a>
@@ -44,7 +44,7 @@
                 <th class="text-center">Action</th>
             </tr>
             </thead>
-            <tr></tr>
+            <tbody id="table-body"></tbody>
         </table>
     </div>
 
@@ -132,6 +132,7 @@
 
 <!--Template-->
 <script type="text/template" id="item-template">
+
     <td><%- listName %></td>
     <td class="text-center">
         <button id="edit" class='btn btn-info btn-xs' data-toggle="modal" data-list-name="<%- listName %>"
@@ -142,10 +143,10 @@
                 class="glyphicon glyphicon-remove"></span> Delete
         </button>
         <button class="btn btn-info btn-xs" id="viewItem"><span
-                class="glyphicon glyphicon-remove"></span> View Items
+                class="glyphicon glyphicon-sunglasses"></span> View Items
         </button>
     </td>
-    </td>
+
 </script>
 
 <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.3.3/underscore-min.js"

@@ -5,6 +5,7 @@
     <title>To-do</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" media="screen"
@@ -26,7 +27,7 @@
         </ul>
 
         <div class="navbar-header" style="float: right">
-            <a class="navbar-brand" onclick="logout()">Logout</a>
+            <a class="navbar-brand" id="logout" onclick="logout()">Logout</a>
         </div>
     </div>
 </nav>
@@ -37,7 +38,10 @@
             Go back</a>
         <a href="" class="btn btn-success" data-toggle="modal" data-target="#myModal"><b>+</b>
             Add new item</a>
+        <h2><span class="label label-default text-center" id="list-name"></span></h2>
+
     </div>
+
     <div class="row col-md-6 col-md-offset-3 custyle">
         <table class="table table-striped custab" id="listview">
             <thead>
@@ -49,7 +53,7 @@
                 <th class="text-center">Action</th>
             </tr>
             </thead>
-            <tr></tr>
+            <tbody></tbody>
         </table>
     </div>
 
@@ -85,7 +89,7 @@
 
                         <div class="form-group">
                             <label>Deadline</label><br>
-                            <input type="date" name="newDatePicker" id="newDatePicker">
+                            <input type="text" name="newDatePicker" id="newDatePicker">
                         </div>
                     </form>
 
@@ -143,7 +147,7 @@
 
                         <div class="form-group">
                             <label>Deadline</label><br>
-                            <input type="date" name="datepicker" id="datepicker">
+                            <input type="text" name="datepicker" id="datepicker">
                         </div>
 
                     </form>
@@ -172,7 +176,7 @@
 <script type="text/template" id="item-template">
     <td><%- ItemName %></td>
     <td><%- itemDetails %></td>
-    <td><%- priority %></td>
+    <td><span class="label label-warning"><%- priority %></span></td>
     <td><%- deadline %></td>
     <td class="text-center">
         <a class='btn btn-info btn-xs' href="#" data-toggle="modal" data-item-id='<%- itemId %>' data-item-name='<%- ItemName %>'
@@ -193,5 +197,7 @@
         type="text/javascript"></script>
 <script type='text/javascript' src="../../js/singleList.js"></script>
 
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 </body>
 </html>

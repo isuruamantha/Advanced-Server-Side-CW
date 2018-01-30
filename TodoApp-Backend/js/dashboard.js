@@ -6,8 +6,10 @@ console.log("userId " + userId);
  */
 if (localStorage.getItem("userName") != null) {
     document.getElementById("logout").innerHTML = "Logout";
+
 } else {
     document.getElementById("logout").innerHTML = "";
+    $('#todoapp').addClass('hidden');
 }
 
 
@@ -41,18 +43,22 @@ app.TodoView = Backbone.View.extend({
         'click #edit': 'editList'
     },
     editList: function (e) {
-        console.log(this.model.toJSON);
         app.currentList = this.model;
     },
     deleteOne: function (e) {
         console.log("delete");
         console.log(this.model);
         this.model.destroy();
+        $('#listview tbody').empty();
+        app.todoList.fetch({
+            url: "http://localhost/Server_Side_CW1/TodoApp-Backend/api/lists/" + userId
+        });
     },
     viewItem: function (e) {
         var listId = (this.model.get("listId"));
-        console.log(listId);
+        var listName = (this.model.get("listName"));
         localStorage.setItem("listId", listId);
+        localStorage.setItem("listName", listName);
         window.location = "SingleList.html";
     }
 });
@@ -70,7 +76,6 @@ app.AppView = Backbone.View.extend({
     },
     events: {
         'click #saveList': 'saveList',
-        'keypress #new-todo': 'createTodoOnEnter',
         'click #update-saveButton': 'updateListName'
     },
     saveList: function () {
@@ -78,10 +83,11 @@ app.AppView = Backbone.View.extend({
         var newtodo = new app.Todo;
         newtodo.set('listName', val);
         newtodo.set('userId', userId);
-        console.log(newtodo.toJSON());
         newtodo.save();
-        $('#listview').html('');
-        app.todoList.fetch();
+        $('#listview tbody').empty();
+        app.todoList.fetch({
+            url: "http://localhost/Server_Side_CW1/TodoApp-Backend/api/lists/" + userId
+        });
     },
     updateListName: function (e) {
         var listId = $("#listId-updated").val();
@@ -89,29 +95,21 @@ app.AppView = Backbone.View.extend({
         var newtodo = new app.Todo;
         newtodo.set('listId', listId);
         newtodo.set('listName', listName);
-        console.log(newtodo.toJSON());
         newtodo.save();
-    },
-    createTodoOnEnter: function (e) {
-        if (e.which !== 13 || !this.input.val().trim()) { // ENTER_KEY = 13
-            return;
-        }
-        app.todoList.create(this.newAttributes());
-        this.input.val(''); // clean input box
+        $('#listview tbody').empty();
+        app.todoList.fetch({
+            url: "http://localhost/Server_Side_CW1/TodoApp-Backend/api/lists/" + userId
+        });
+
     },
     addOne: function (todo) {
         var view = new app.TodoView({model: todo});
         $('#listview').append(view.render().el);
     },
     addAll: function () {
-        this.$('#todo-list').html(''); // clean the todo list
+        // this.$('#todo-list').html('');
+        $('#listview tbody').empty();
         app.todoList.each(this.addOne, this);
-    },
-    newAttributes: function () {
-        return {
-            title: this.input.val().trim(),
-            completed: false
-        }
     }
 });
 

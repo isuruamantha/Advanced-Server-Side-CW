@@ -24,7 +24,7 @@ class Lists extends REST_Controller
             $result = $this->ListModel->getLists($userId);
             if ($result === false) {
                 $resposnse = array("message" => "Error", "code" => "001");
-                $this->response($resposnse, 200);
+                $this->response($resposnse, 400);
             } else {
                 $this->response($result, 200);
             }
@@ -48,10 +48,10 @@ class Lists extends REST_Controller
                 "userId" => $userId));
             if ($result === 0) {
                 $resposnse = array("message" => "Error", "code" => "001");
-                $this->response($resposnse, 404);
+                $this->response($resposnse, 400);
             } else {
                 $resposnse = array("message" => "Success", "code" => "001");
-                $this->response($resposnse, 200);
+                $this->response($resposnse, 201);
             }
         }
     }
@@ -70,7 +70,7 @@ class Lists extends REST_Controller
             $result = $this->ListModel->updateList(array("listId" => $listId, "listName" => $listName));
             if ($result === 0) {
                 $resposnse = array("message" => "Error", "code" => "001");
-                $this->response($resposnse, 404);
+                $this->response($resposnse, 400);
             } else {
                 $resposnse = array("message" => "Success", "code" => "001");
                 $this->response($resposnse, 200);

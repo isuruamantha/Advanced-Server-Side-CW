@@ -1,5 +1,27 @@
+var userId = localStorage.getItem("userId");
+console.log("userId " + userId);
+
+/*
+ To view/remove logout button
+ */
+if (localStorage.getItem("userName") != null) {
+    document.getElementById("logout").innerHTML = "Logout";
+
+} else {
+    document.getElementById("logout").innerHTML = "";
+    $('#todoapp').addClass('hidden');
+}
+
+$( function() {
+    $("#newDatePicker").datepicker({ dateFormat: 'yy-mm-dd' });
+    $("#newDatePicker").datepicker('setDate', new Date());
+} );
+
 var app = {};
 var listId = localStorage.getItem("listId");
+var listName = localStorage.getItem("listName");
+console.log(listName);
+document.getElementById('list-name').innerHTML = listName;
 
 // Models
 app.Todo = Backbone.Model.extend({
@@ -29,14 +51,13 @@ app.TodoView = Backbone.View.extend({
         'click #viewItem': 'viewItem'
     },
     deleteOne: function (e) {
-        console.log(this.model.toJSON);
-        console.log(this.model)
         this.model.destroy();
-        // this.$('#todo-list').html(''); // clean the todo list
-        // app.todoList.each(this.addOne, this);
+        $('#listview tbody').empty();
+        app.todoList.fetch({
+            url: "http://localhost/Server_Side_CW1/TodoApp-Backend/api/items/" + listId
+        });
     },
     viewItem: function (e) {
-        console.log(this.model);
         window.location = "SingleList.html";
     }
 });
@@ -53,7 +74,6 @@ app.AppView = Backbone.View.extend({
     },
     events: {
         'click #saveList': 'saveList',
-        'keypress #new-todo': 'createTodoOnEnter',
         'click #update-saveButton': 'updateListName'
     },
     updateListName: function (e) {
@@ -64,13 +84,13 @@ app.AppView = Backbone.View.extend({
         var deadline = $("#datepicker").val();
 
         if (document.getElementById('edited-high').checked) {
-            priority = "High"
+            priority = "high"
         } else if (document.getElementById('edited-medium').checked) {
-            priority = "Medium"
+            priority = "medium"
         } else {
-            priority = "Low"
+            priority = "low"
         }
-
+        console.log(priority);
         var newtodo = new app.Todo;
         newtodo.set('itemId', itemId);
         newtodo.set('itemName', itemName);
@@ -79,15 +99,20 @@ app.AppView = Backbone.View.extend({
         newtodo.set('deadline', deadline);
         newtodo.set('listId', listId);
         newtodo.save();
+
+        $('#listview tbody').empty();
+        app.todoList.fetch({
+            url: "http://localhost/Server_Side_CW1/TodoApp-Backend/api/items/" + listId
+        });
     },
     saveList: function (e) {
+
         var newname = $("#newname").val();
         var itemDetails = $("#itemDetails").val();
         var priority = $("#priority").val();
-        var deadline = $("#newDatePicker").val();
-
-        console.log("workin");
-
+        var deadline = $("#newDatePicker").datepicker({ dateFormat: 'dd-mm-yy' }).val();
+        // var date = $('#datepicker').datepicker({ dateFormat: 'dd-mm-yy' }).val();
+        console.log(deadline);
         if (document.getElementById('high').checked) {
             priorityLevel = document.getElementById('high').value;
         } else if (document.getElementById('medium').checked) {
@@ -101,33 +126,21 @@ app.AppView = Backbone.View.extend({
         newtodo.save({
             itemName: newname, itemDetails: itemDetails,
             priority: priorityLevel, deadline: deadline,
-            listId: listId,
+            listId: listId
         });
-        $('#listview').html('');
+        $('#listview tbody').empty();
         app.todoList.fetch({
             url: "http://localhost/Server_Side_CW1/TodoApp-Backend/api/items/" + listId
         });
-    },
-    createTodoOnEnter: function (e) {
-        if (e.which !== 13 || !this.input.val().trim()) { // ENTER_KEY = 13
-            return;
-        }
-        app.todoList.create(this.newAttributes());
-        this.input.val(''); // clean input box
     },
     addOne: function (todo) {
         var view = new app.TodoView({model: todo});
         $('#listview').append(view.render().el);
     },
     addAll: function () {
-        this.$('#todo-list').html(''); // clean the todo list
+        // this.$('#todo-list').html(''); // clean the todo list
+        $('#listview tbody').empty();
         app.todoList.each(this.addOne, this);
-    },
-    newAttributes: function () {
-        return {
-            title: this.input.val().trim(),
-            completed: false
-        }
     }
 });
 
@@ -149,8 +162,7 @@ $('#editItemModal').on('show.bs.modal', function (e) {
     var itemPriority = $(e.relatedTarget).data('item-priority');
     var itemDeadline = $(e.relatedTarget).data('item-deadline');
 
-    console.log(itemDeadline);
-
+    console.log(itemPriority);
     $(e.currentTarget).find('input[name="edited-newname"]').val(itemName);
     $(e.currentTarget).find('input[name="edited-item-id"]').val(itemId);
     $(e.currentTarget).find('input[name="edited-itemDetails"]').val(itemDetails);
@@ -162,14 +174,8 @@ $('#editItemModal').on('show.bs.modal', function (e) {
     } else {
         $("#edited-low").prop("checked", true);
     }
-    document.getElementById('datepicker').value = new Date().toDateInputValue();
+    
+    $("#datepicker").datepicker({ dateFormat: 'yy-mm-dd' });
+    $("#datepicker").datepicker('setDate', itemDeadline);
 
-});
-
-
-// To set the default date
-Date.prototype.toDateInputValue = (function () {
-    var local = new Date(this);
-    local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
-    return local.toJSON().slice(0, 10);
 });

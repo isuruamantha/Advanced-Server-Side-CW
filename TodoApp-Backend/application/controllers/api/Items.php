@@ -25,7 +25,7 @@ class Items extends REST_Controller
             $result = $this->ItemModel->getItems($listId);
             if ($result === false) {
                 $resposnse = array("message" => "Error", "code" => "001");
-                $this->response($resposnse, 404);
+                $this->response($resposnse, 400);
             } else {
                 $this->response($result, 200);
             }
@@ -50,7 +50,7 @@ class Items extends REST_Controller
          * 3 - high
          */
 
-        $priority == strtolower($priority);
+        $priority = strtolower($priority);
         if ($priority == "low") {
             $priority = 1;
         } else if ($priority == "medium") {
@@ -67,10 +67,10 @@ class Items extends REST_Controller
                 "priority" => $priority, "listId" => $listId, "deadline" => $deadline));
             if ($result === 0) {
                 $resposnse = array("message" => "Error", "code" => "001");
-                $this->response($resposnse, 404);
+                $this->response($resposnse, 400);
             } else {
                 $resposnse = array("message" => "Success", "code" => "001");
-                $this->response($resposnse, 200);
+                $this->response($resposnse, 201);
             }
         }
     }
@@ -104,7 +104,7 @@ class Items extends REST_Controller
                 "priority" => $priority, "listId" => $listId, "deadline" => $deadline, "itemId" => $itemId));
             if ($result === 0) {
                 $resposnse = array("message" => "Error", "code" => "001");
-                $this->response($resposnse, 404);
+                $this->response($resposnse, 400);
             } else {
                 $resposnse = array("message" => "Success", "code" => "001");
                 $this->response($resposnse, 200);
@@ -127,7 +127,7 @@ class Items extends REST_Controller
             $this->response($resposnse, 200);
         } else {
             $resposnse = array("message" => "Failed", "code" => "001");
-            $this->response($resposnse, 404);
+            $this->response($resposnse, 400);
         }
 
     }

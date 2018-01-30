@@ -22,7 +22,8 @@ class Users extends REST_Controller
         $userEmail = $this->post('userEmail');
 
         if (!$userName || !$userPassword || !$userEmail) {
-            $this->response("Enter complete user information to save", 200);
+            $result = array("message" => "Enter complete user information to save", "code" => "001");
+            $this->response($result, 400);
         } else {
 
             $isValidEmail = $this->UserModel->emailCheck($userEmail);
@@ -35,7 +36,7 @@ class Users extends REST_Controller
                     $this->response($result, 200);
                 } else {
                     $result = array("message" => "Success", "code" => "001");
-                    $this->response($result, 200);
+                    $this->response($result, 201);
                 }
             } else {
                 $result = array("message" => "Email already found", "code" => "001");
@@ -54,7 +55,7 @@ class Users extends REST_Controller
 
         if (!$userName || !$userPassword) {
             $result = array("message" => "Please enter valid data", "code" => "001");
-            $this->response($result, 200);
+            $this->response($result, 400);
         } else {
             $result = $this->UserModel->loginUser($userName, md5($userPassword));
             if ($result != "") {

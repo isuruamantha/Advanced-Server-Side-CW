@@ -10,3 +10,12 @@
     box-shadow: 3px 3px 0px transparent;
     transition: 1.15s;
 }
+
+body{
+    background: url(../images/dashboard-image.jpg) no-repeat center center fixed;
+}
+
+table{
+    background-color: white;
+    opacity: 0.9;
+}
