@@ -1,6 +1,5 @@
 var userId = localStorage.getItem("userId");
-console.log("userId " + userId);
-
+$.ajaxSetup({ cache: false });
 /*
  To view/remove logout button
  */
@@ -22,18 +21,28 @@ app.Todo = Backbone.Model.extend({
 });
 // Collections
 app.TodoList = Backbone.Collection.extend({
-    model: app.Todo,
-    url: "http://localhost/Server_Side_CW1/TodoApp-Backend/api/lists/"
+    initialize: function(models, options) {
+        this.url = 'http://localhost/Server_Side_CW1/TodoApp-Backend/api/lists/' + options.id;
+    },
+    fetch: function (options) {
+        options = options || {};
+        options.cache = false;
+
+        return Backbone.Collection.prototype.fetch.call(this, options);
+    },
+    model: app.Todo
+
 });
 
 // instance of the Collection
-app.todoList = new app.TodoList();
+app.todoList = new app.TodoList([], { id: userId });
 
 // renders individual todo items list (li)
 app.TodoView = Backbone.View.extend({
     tagName: 'tr',
     template: _.template($('#item-template').html()),
     render: function () {
+
         this.$el.html(this.template(this.model.toJSON()));
         return this; // enable chained calls
     },
@@ -46,13 +55,11 @@ app.TodoView = Backbone.View.extend({
         app.currentList = this.model;
     },
     deleteOne: function (e) {
-        console.log("delete");
-        console.log(this.model);
+
         this.model.destroy();
         $('#listview tbody').empty();
-        app.todoList.fetch({
-            url: "http://localhost/Server_Side_CW1/TodoApp-Backend/api/lists/" + userId
-        });
+        alert("List deleted successfully");
+        app.todoList.fetch();
     },
     viewItem: function (e) {
         var listId = (this.model.get("listId"));
@@ -70,40 +77,53 @@ app.AppView = Backbone.View.extend({
         this.input = this.$('#new-todo');
         app.todoList.on('add', this.addOne, this);
         app.todoList.on('reset', this.addAll, this);
-        app.todoList.fetch({
-            url: "http://localhost/Server_Side_CW1/TodoApp-Backend/api/lists/" + userId
-        });
+
+        app.todoList.fetch();
+
     },
     events: {
         'click #saveList': 'saveList',
         'click #update-saveButton': 'updateListName'
     },
     saveList: function () {
-        var val = $("#newname").val()
-        var newtodo = new app.Todo;
-        newtodo.set('listName', val);
-        newtodo.set('userId', userId);
-        newtodo.save();
-        $('#listview tbody').empty();
-        app.todoList.fetch({
-            url: "http://localhost/Server_Side_CW1/TodoApp-Backend/api/lists/" + userId
-        });
+
+        var val = $("#newname").val();
+        if (val == ""){
+            alert("Please fill the relevant field")
+        }else{
+            var newtodo = new app.Todo;
+            newtodo.set('listName', val);
+            newtodo.set('userId', userId);
+            newtodo.save();
+            $('#listview tbody').empty();
+            alert("List added successfully");
+            app.todoList.fetch({wait:true});
+        }
+        $('#newname').val('');
+
     },
     updateListName: function (e) {
         var listId = $("#listId-updated").val();
         var listName = $("#listNameNew").val();
-        var newtodo = new app.Todo;
-        newtodo.set('listId', listId);
-        newtodo.set('listName', listName);
-        newtodo.save();
-        $('#listview tbody').empty();
-        app.todoList.fetch({
-            url: "http://localhost/Server_Side_CW1/TodoApp-Backend/api/lists/" + userId
-        });
+
+        if (listName == ""){
+            alert("Please fill the relevant field")
+        }else{
+            var newtodo = new app.Todo;
+            newtodo.set('listId', listId);
+            newtodo.set('listName', listName);
+            newtodo.save();
+            $('#listview tbody').empty();
+            alert("List edited successfully");
+            app.todoList.fetch();
+        }
+
 
     },
     addOne: function (todo) {
         var view = new app.TodoView({model: todo});
+
+        $('#no-item').addClass('hidden');
         $('#listview').append(view.render().el);
     },
     addAll: function () {
@@ -130,3 +150,4 @@ $('#editModal').on('show.bs.modal', function (e) {
     $(e.currentTarget).find('input[name="listNameNew"]').val(listName);
     $(e.currentTarget).find('input[name="listId-updated"]').val(listId);
 });
+

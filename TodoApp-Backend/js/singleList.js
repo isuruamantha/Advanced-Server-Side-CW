@@ -1,5 +1,4 @@
 var userId = localStorage.getItem("userId");
-console.log("userId " + userId);
 
 /*
  To view/remove logout button
@@ -12,15 +11,14 @@ if (localStorage.getItem("userName") != null) {
     $('#todoapp').addClass('hidden');
 }
 
-$( function() {
-    $("#newDatePicker").datepicker({ dateFormat: 'yy-mm-dd' });
+$(function () {
+    $("#newDatePicker").datepicker({dateFormat: 'yy-mm-dd'});
     $("#newDatePicker").datepicker('setDate', new Date());
-} );
+});
 
 var app = {};
 var listId = localStorage.getItem("listId");
 var listName = localStorage.getItem("listName");
-console.log(listName);
 document.getElementById('list-name').innerHTML = listName;
 
 // Models
@@ -31,12 +29,15 @@ app.Todo = Backbone.Model.extend({
 
 // Collections
 app.TodoList = Backbone.Collection.extend({
-    model: app.Todo,
-    url: "http://localhost/Server_Side_CW1/TodoApp-Backend/api/items/"
+    initialize: function (models, options) {
+        this.url = 'http://localhost/Server_Side_CW1/TodoApp-Backend/api/items/' + options.id;
+    },
+    model: app.Todo
+
 });
 
 // instance of the Collection
-app.todoList = new app.TodoList();
+app.todoList = new app.TodoList([], {id: listId});
 
 // renders individual todo items list (li)
 app.TodoView = Backbone.View.extend({
@@ -53,9 +54,8 @@ app.TodoView = Backbone.View.extend({
     deleteOne: function (e) {
         this.model.destroy();
         $('#listview tbody').empty();
-        app.todoList.fetch({
-            url: "http://localhost/Server_Side_CW1/TodoApp-Backend/api/items/" + listId
-        });
+        alert("Item deleted successfully");
+        app.todoList.fetch();
     },
     viewItem: function (e) {
         window.location = "SingleList.html";
@@ -68,9 +68,7 @@ app.AppView = Backbone.View.extend({
         this.input = this.$('#new-todo');
         app.todoList.on('add', this.addOne, this);
         app.todoList.on('reset', this.addAll, this);
-        app.todoList.fetch({
-            url: "http://localhost/Server_Side_CW1/TodoApp-Backend/api/items/" + listId
-        });
+        app.todoList.fetch();
     },
     events: {
         'click #saveList': 'saveList',
@@ -90,29 +88,32 @@ app.AppView = Backbone.View.extend({
         } else {
             priority = "low"
         }
-        console.log(priority);
-        var newtodo = new app.Todo;
-        newtodo.set('itemId', itemId);
-        newtodo.set('itemName', itemName);
-        newtodo.set('itemDetails', itemDetails);
-        newtodo.set('priority', priority);
-        newtodo.set('deadline', deadline);
-        newtodo.set('listId', listId);
-        newtodo.save();
 
-        $('#listview tbody').empty();
-        app.todoList.fetch({
-            url: "http://localhost/Server_Side_CW1/TodoApp-Backend/api/items/" + listId
-        });
+        if (itemName == "" || itemDetails == "") {
+            alert("Please fill the relevant field")
+        } else {
+            var newtodo = new app.Todo;
+            newtodo.set('itemId', itemId);
+            newtodo.set('itemName', itemName);
+            newtodo.set('itemDetails', itemDetails);
+            newtodo.set('priority', priority);
+            newtodo.set('deadline', deadline);
+            newtodo.set('listId', listId);
+            newtodo.save();
+
+            $('#listview tbody').empty();
+            alert("Item edited successfully");
+            app.todoList.fetch();
+        }
+
     },
     saveList: function (e) {
 
         var newname = $("#newname").val();
         var itemDetails = $("#itemDetails").val();
         var priority = $("#priority").val();
-        var deadline = $("#newDatePicker").datepicker({ dateFormat: 'dd-mm-yy' }).val();
-        // var date = $('#datepicker').datepicker({ dateFormat: 'dd-mm-yy' }).val();
-        console.log(deadline);
+        var deadline = $("#newDatePicker").datepicker({dateFormat: 'dd-mm-yy'}).val();
+
         if (document.getElementById('high').checked) {
             priorityLevel = document.getElementById('high').value;
         } else if (document.getElementById('medium').checked) {
@@ -121,20 +122,26 @@ app.AppView = Backbone.View.extend({
             priorityLevel = document.getElementById('low').value;
         }
 
-        var newtodo = new app.Todo;
+        if (newname == "" || itemDetails == "") {
+            alert("Please fill the relevant field")
+        } else {
+            var newtodo = new app.Todo;
+            newtodo.save({
+                itemName: newname, itemDetails: itemDetails,
+                priority: priorityLevel, deadline: deadline,
+                listId: listId
+            });
+            $('#listview tbody').empty();
+            alert("Item added successfully");
+            app.todoList.fetch();
+        }
 
-        newtodo.save({
-            itemName: newname, itemDetails: itemDetails,
-            priority: priorityLevel, deadline: deadline,
-            listId: listId
-        });
-        $('#listview tbody').empty();
-        app.todoList.fetch({
-            url: "http://localhost/Server_Side_CW1/TodoApp-Backend/api/items/" + listId
-        });
+        $('#newname').val('');
+        $('#itemDetails').val('');
     },
     addOne: function (todo) {
         var view = new app.TodoView({model: todo});
+        $('#no-item').addClass('hidden');
         $('#listview').append(view.render().el);
     },
     addAll: function () {
@@ -162,7 +169,6 @@ $('#editItemModal').on('show.bs.modal', function (e) {
     var itemPriority = $(e.relatedTarget).data('item-priority');
     var itemDeadline = $(e.relatedTarget).data('item-deadline');
 
-    console.log(itemPriority);
     $(e.currentTarget).find('input[name="edited-newname"]').val(itemName);
     $(e.currentTarget).find('input[name="edited-item-id"]').val(itemId);
     $(e.currentTarget).find('input[name="edited-itemDetails"]').val(itemDetails);
@@ -174,8 +180,8 @@ $('#editItemModal').on('show.bs.modal', function (e) {
     } else {
         $("#edited-low").prop("checked", true);
     }
-    
-    $("#datepicker").datepicker({ dateFormat: 'yy-mm-dd' });
+
+    $("#datepicker").datepicker({dateFormat: 'yy-mm-dd'});
     $("#datepicker").datepicker('setDate', itemDeadline);
 
 });
